@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papapapapapapapapapapapapapapapa==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --background-start: #e0e7ff;
+      --background-end: #c7d2fe;
+      --input-border: #d1d5db;
+      --input-focus: #6366f1;
+      --text-color: #111827;
+      --radius: 0.75rem;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--background-start), var(--background-end));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: var(--text-color);
+    }
+
+    .signup-container {
+      background: #ffffff;
+      padding: 3rem;
+      border-radius: var(--radius);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      max-width: 420px;
+      width: 100%;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .signup-container h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    .form-group i {
+      position: absolute;
+      top: 50%;
+      left: 0.75rem;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      font-size: 1rem;
+    }
+
+    .signup-btn {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: linear-gradient(90deg, var(--primary), var(--primary-hover));
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .signup-btn:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(90deg, var(--primary-hover), var(--primary));
+    }
+
+    .footer-text {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    .footer-text a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
+
+    .alert {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+      text-align: center;
+      border: 1px solid #fca5a5;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h1>Create Account</h1>
+
+    {% if invalid %}
+      <div class="alert" role="alert">
+        {{ invalid }}
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <i class="fa fa-user"></i>
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Your full name" name="fnm" required />
+      </div>
+      <div class="form-group">
+        <i class="fa fa-envelope"></i>
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" name="email_id" required />
+      </div>
+      <div class="form-group">
+        <i class="fa fa-lock"></i>
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Create a password" name="password" required />
+      </div>
+      <button type="submit" class="signup-btn">Sign Up</button>
+    </form>
+    <p class="footer-text">Already have an account? <a href="#">Log in</a></p>
+  </div>
+</body>
+</html>
