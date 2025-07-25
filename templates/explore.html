@@ -5,113 +5,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">
-    
+    <title>Explore</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/cb792c0850.js" crossorigin="anonymous"></script>
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/app.css' %}">
-
-    <title>Explore | Social Media</title>
-
+    <!-- Custom Styling (from main.html) -->
     <style>
         body {
-            overflow-x: hidden;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: #495057;
         }
+
         .sidebar {
-            background-color: #f8f9fa;
+            background-color: white;
             height: 100vh;
-            color: black;
             position: fixed;
-            width: 220px;
+            padding: 1.5rem 0;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
         }
-        .main-content {
-            margin-left: 240px;
-            padding: 20px;
-        }
-        .profile-pic {
-            width: 60px;
-            height: 60px;
+
+        .profile-img {
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             object-fit: cover;
+            border: 3px solid #4361ee;
+            margin-bottom: 1rem;
         }
-        .card-img-top {
+
+        .nav-link {
+            color: #495057;
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem 0;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: #4361ee;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .post-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 600px;
             object-fit: cover;
-            height: 300px;
         }
-        a {
-            color: black;
+
+        .post-content {
+            padding: 1.5rem;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .btn-like {
+            background-color: rgba(244, 63, 94, 0.1);
+            color: #f43f5e;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-like:hover {
+            background-color: rgba(244, 63, 94, 0.2);
+        }
+
+        .like-count {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .username-link {
             text-decoration: none;
+            color: #212529;
+            font-weight: 600;
         }
-        a:hover {
-            color: #007bff;
+
+        .username-link:hover {
+            color: #4361ee;
+        }
+
+        .post-caption {
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        .post-time {
+            font-size: 0.85rem;
+            color: #adb5bd;
+        }
+
+        .no-posts {
+            text-align: center;
+            padding: 5rem 0;
+            color: #adb5bd;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .profile-img {
+                width: 60px;
+                height: 60px;
+            }
         }
     </style>
 </head>
 <body>
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar col-md-3 col-lg-2 d-md-block text-center">
+        {% if profile.profileimg %}
+            <img src="{{ profile.profileimg.url }}" class="profile-img" alt="Profile">
+        {% else %}
+            <img src="{% static 'img/default.jpg' %}" class="profile-img" alt="Profile">
+        {% endif %}
+        <h5 class="mt-2">@{{ request.user.username }}</h5>
 
-<div class="container-fluid">
-    <div class="row">
-
-        <!-- Sidebar -->
-        <nav class="col-md-2 d-none d-md-block sidebar">
-            <div class="text-center mt-4">
-                {% if profile.profileimg %}
-                    <img src="{{ profile.profileimg.url }}" alt="Profile Picture" class="profile-pic">
-                {% else %}
-                    <img src="{% static 'img/default.jpg' %}" alt="Default Picture" class="profile-pic">
-                {% endif %}
-                <h5 class="mt-2">
-                    <a href="/profile/{{ user.username }}">@{{ user.username }}</a>
-                </h5>
-            </div>
-
-            <ul class="nav flex-column mt-4">
-                <li class="nav-item"><a class="nav-link" href="/"><i class="fa-solid fa-house me-1"></i> Home</a></li>
-                <li class="nav-item"><a class="nav-link active" href="/explore"><i class="fa-solid fa-compass me-1"></i> Explore</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal3"><i class="fa-solid fa-magnifying-glass me-1"></i> Search</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-circle-plus me-1"></i> Create Post</a></li>
-                <li class="nav-item"><a class="nav-link" href="/profile/{{ user.username }}"><i class="fa-solid fa-user me-1"></i> Profile</a></li>
-                <li class="nav-item"><a class="nav-link" href="/logoutt"><i class="fa-solid fa-right-from-bracket me-1"></i> Logout</a></li>
-            </ul>
+        <nav class="nav flex-column mt-4">
+            <a class="nav-link" href="/"><i class="fas fa-home me-2"></i> Home</a>
+            <a class="nav-link active" href="/explore"><i class="fas fa-compass me-2"></i> Explore</a>
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search me-2"></i> Search</a>
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createPostModal"><i class="fas fa-plus-circle me-2"></i> Create Post</a>
+            <a class="nav-link" href="/profile/{{ request.user.username }}"><i class="fas fa-user me-2"></i> Profile</a>
+            <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
         </nav>
+    </div>
 
-        <!-- Main Content -->
-        <main class="main-content col">
-            {% include "modal.html" %}
-            {% include "search.html" %}
-
-            <div class="container">
-                <h2 class="mb-4">Explore Posts</h2>
-                <div class="row">
-                    {% for pos in post %}
-                        <div class="col-md-6 col-lg-4 mb-4">
-                            <div class="card shadow-sm">
-                                <img src="{{ pos.image.url }}" class="card-img-top" alt="{{ pos.caption }}">
-                                <div class="card-body">
-                                    <h5 class="card-title">@{{ pos.user }}</h5>
-                                    <p class="card-text">{{ pos.caption }}</p>
-                                </div>
+    <!-- Main Content -->
+    <div class="main-content col">
+        <h2 class="mb-4">Explore</h2>
+        <div class="row">
+            {% for pos in post %}
+                <div class="col-lg-6 mx-auto mb-4" id="{{ pos.id }}">
+                    <div class="post-card">
+                        {% if pos.image %}
+                            <img src="{{ pos.image.url }}" alt="Post Image" class="post-image">
+                        {% else %}
+                            <img src="{% static 'images/placeholder.png' %}" alt="No Image" class="post-image">
+                        {% endif %}
+                        <div class="post-content">
+                            <h5><a href="/profile/{{ pos.user }}" class="username-link">@{{ pos.user }}</a></h5>
+                            <p class="post-caption">{{ pos.caption }}</p>
+                            <p class="post-time">{{ pos.created_at }}</p>
+                            <div class="post-actions">
+                                <a href="/like-post/{{ pos.id }}" class="btn-like"><i class="fa-solid fa-heart me-1"></i> Like</a>
+                                <span class="like-count">
+                                    {% if pos.no_of_likes == 0 %}0 likes
+                                    {% elif pos.no_of_likes == 1 %}1 like
+                                    {% else %}{{ pos.no_of_likes }} likes
+                                    {% endif %}
+                                </span>
                             </div>
                         </div>
-                    {% empty %}
-                        <p>No posts available.</p>
-                    {% endfor %}
+                    </div>
                 </div>
-            </div>
-        </main>
+            {% empty %}
+                <div class="no-posts">
+                    <i class="fa-regular fa-compass fa-3x mb-3"></i>
+                    <h4>No posts to explore</h4>
+                    <p>Try following someone or create your first post!</p>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
-<!-- Scripts -->
-<script src="{% static 'js/app.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

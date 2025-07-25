@@ -47,7 +47,6 @@ def logout_view(request):
     return redirect('/login')
 
 @login_required(login_url='/login')
-#POST UPLOAD FEATURE
 def upload(request):
     if request.method == 'POST':
         user = request.user.username
@@ -62,16 +61,17 @@ def upload(request):
 
 @login_required(login_url='/login')
 def home(request):
-    following_users=Followers.objects.filter(follower=request.user.username).values_list('user',flat=True)
+    following_users = Followers.objects.filter(follower=request.user.username).values_list('user', flat=True)
+    post = Post.objects.filter(
+        Q(user=request.user.username) | Q(user__in=following_users)
+    ).order_by('-created_at')
 
-    post = Post.objects.filter(Q(user=request.user.username)| Q(user__in=following_users)).order_by('-created_at') # IN DATABASE WE USE AS A OR SO WE USED Q 
-    Profile_data=Profile.objects.get(user=request.user)
-    context={
-        'post':post,
-        'profile_data':Profile_data, 
+    profile_data = Profile.objects.get(user=request.user)
+    context = {
+        'post': post,
+        'profile_data': profile_data,
     }
-    return render(request, 'main.html', {'post': post})
-
+    return render(request, 'main.html', context)
 @login_required(login_url='/login')
 def likes(request, id):
     username = request.user.username
@@ -105,13 +105,13 @@ def home_posts(request):
 
 
 def explore(request):
-    post=Post.objects.all().order_by('-created_at')
- #   profile=Profile.objects.get(user=request.user)
-    context={
-        'post':post,
-  #      'profile':profile
+    post = Post.objects.all().order_by('-created_at')
+    profile = Profile.objects.get(user=request.user)
+    context = {
+        'post': post,
+        'profile': profile
     }
-    return render(request,'explore.html',context)
+    return render(request, 'explore.html', context)
 
 @login_required(login_url='/login')
 def profile(request, id_user):
@@ -134,7 +134,6 @@ def profile(request, id_user):
         'user_profile': user_profile,
         'user_post': user_post,
         'user_post_len': user_post_len,
-        'profile':profile,
         'follow_unfollow':follow_unfollow,
         'user_following':user_following,
         'user_followers':user_followers,
